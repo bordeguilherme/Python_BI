@@ -1,0 +1,11 @@
+ID,Gênero,Idade,Marca,Satisfação
+1,Masculino,25,Apple,Alta
+2,Feminino,30,Samsung,Média
+3,Masculino,22,Xiaomi,Alta
+4,Feminino,27,Apple,Alta
+5,Outro,35,Samsung,Baixa
+6,Masculino,40,Xiaomi,Média
+7,Feminino,29,Outros,Média
+8,Masculino,32,Samsung,Alta
+9,Feminino,24,Apple,Média
+10,Outro,28,Xiaomi,Baixa
