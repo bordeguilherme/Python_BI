@@ -6,7 +6,7 @@
 import pandas as pd
 import mplfinance as mpf
 
-df = pd.read_csv('dados_financeiros.csv')
+df = pd.read_csv('./dados_2.csv')
 
 df['Data'] = pd.to_datetime(df['Data'])
 

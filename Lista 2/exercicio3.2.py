@@ -6,7 +6,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-arquivo_csv = 'caminho_para_seu_arquivo.csv'
+arquivo_csv = './arquivo_3.csv'
 dados = pd.read_csv(arquivo_csv)
 
 distribuicao_marca = dados['Marca'].value_counts()
