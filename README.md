@@ -24,5 +24,5 @@ Este repositório foi criado para incluir as atividades e trabalhos corresponden
 
 <h2>Autor</h2>  
 <div align="center">
-<a href="https://github.com/bordeguilherme">Gulherme Borde</a>
+<a href="https://github.com/bordeguilherme">Guilherme Borde</a>
   </div>
