@@ -1,13 +1,9 @@
+# 1. Importação e limpeza de dados
+
 import pandas as pd
 
-# Exercício 1: Importação de dados
-# Carrega o arquivo Excel
 xls = pd.ExcelFile('VendasDiarias.xlsx')
-
-# Dicionário para armazenar DataFrames modificados
 dfs_modificados = {}
-
-# Mapeamento de renomeação de colunas
 colunas_renomeadas = {
     'Data_Unnamed: 0_level_1': 'Data',
     'Planejamento Futuro_Unnamed: 9_level_1': 'Planejamento Futuro',
@@ -17,52 +13,56 @@ colunas_renomeadas = {
     'Taxa de Conversão_Unnamed: 14_level_1': 'Taxa de Conversão'
 }
 
-# Itera sobre as abas do Excel
 for sheet_name in xls.sheet_names:
-    # Exercício 1: Importação de cada aba do Excel
-    df = pd.read_excel(xls, sheet_name=sheet_name, header=[4, 5])
     
+    # Exercício 1: Importe um conjunto de dados XLSX 
+    # (VendasDiarias.xlsx disponibilizado) usando pandas. Exiba as primeiras 5 linhas de cada planilha.
+    df = pd.read_excel(xls, sheet_name=sheet_name, header=[4, 5])
+
     print(f"Aba: {sheet_name}")
     print("Primeiras linhas do dataframe:")
     print(df.head(), "\n")
+
+    colunas_faltantes = set(colunas_renomeadas.keys()) - set(df.columns)
+    if colunas_faltantes:
+        print(f"Colunas faltantes na aba {sheet_name}: {colunas_faltantes}\n")
     
-    # Exercício 2: Verificação e tratamento de valores ausentes
+    # Exercício 2: Verifique se há valores ausentes nos dados e substitua-os ou remova-os.
     missing_values = df.isnull().sum()
     if missing_values.any():
         print(f"Aba: {sheet_name} - Valores ausentes detectados:")
         print(missing_values[missing_values > 0], "\n")
-    
-    # Preenche valores ausentes restantes com zero
+
     df.fillna(0, inplace=True)
     
-    # Exercício 3: Renomeação de colunas
-    # Junta os níveis de cabeçalho e renomeia colunas para nomes mais significativos
+    # Exercício 3: Renomeie colunas de um dataframe para nomes 
+    # mais significativos e remova colunas irrelevantes.
     df.columns = ['_'.join(col).strip() if isinstance(col, tuple) else col for col in df.columns]
     df.rename(columns={col: new_col for col, new_col in colunas_renomeadas.items() if col in df.columns}, inplace=True)
     
-    # Exercício 4: Manipulação de colunas de data
-    # Identifica e processa a coluna de datas, se existir
+    # Exercício 4: Converta a coluna de datas em um formato 
+    # adequado e crie novas colunas para o dia, mês e ano.
     for col in df.columns:
         if 'Data' in col:
             print(f"Coluna de Data encontrada: {col}")
             df[col] = pd.to_datetime(df[col], errors='coerce')
-            
+
             if df[col].isnull().any():
                 print(f"Existem valores inválidos na coluna 'Data' na aba {sheet_name}\n")
-            
-            # Adiciona colunas de Dia, Mês e Ano
+                df.dropna(subset=[col], inplace=True)  
+
             df['Dia'] = df[col].dt.day
             df['Mês'] = df[col].dt.month
             df['Ano'] = df[col].dt.year
             break
 
-    # Remove colunas irrelevantes (exemplo: com todas as células vazias ou sem significado)
     df = df.loc[:, (df != '').any(axis=0)]
+
+    print(f"Resumo estatístico da aba {sheet_name}:")
+    print(df.describe(), "\n")
     
-    # Armazena o DataFrame modificado
     dfs_modificados[sheet_name] = df
 
-# Salva os DataFrames modificados em um novo arquivo Excel
 output_file = 'VendasDiarias_Modificadas.xlsx'
 with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
     for sheet_name, df in dfs_modificados.items():
